@@ -43,3 +43,12 @@ for epoch in range(num_epochs):
 # Save the trained model
 torch.save(model.state_dict(), 'vit_cifar10_model.pth')
 
+# Load the trained model
+model.load_state_dict(torch.load('vit_cifar10_model.pth'))
+model.eval()
+
+# Provide sample input tensor
+sample_input = torch.randn(1, 3, 224, 224).to(device)
+
+# Export the model to ONNX format
+torch.onnx.export(model, sample_input, 'vit_model.onnx', verbose=True, input_names=['input'], output_names=['output'])
