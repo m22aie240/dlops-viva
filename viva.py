@@ -52,3 +52,19 @@ sample_input = torch.randn(1, 3, 224, 224).to(device)
 
 # Export the model to ONNX format
 torch.onnx.export(model, sample_input, 'vit_model.onnx', verbose=True, input_names=['input'], output_names=['output'])
+
+import onnxruntime
+import numpy as np
+
+# Load the ONNX model
+ort_session = onnxruntime.InferenceSession('vit_model.onnx')
+
+# Prepare input data
+input_data = np.random.randn(1, 3, 224, 224).astype(np.float32)
+
+# Run inference
+outputs = ort_session.run(None, {'input': input_data})
+
+# Process the output
+predictions = np.argmax(outputs[0], axis=1)
+print('Predicted class:', predictions)
